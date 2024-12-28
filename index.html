@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Products List </h1>
+    <div class="filter">
+        <input type="number" id="priceFilter" placeholder="filter with the price">
+        <button onclick="filterProducts()">Filter</button>
+        <select id="sortOrder" onchange="sortAndDisplay()">
+            <option value="none">without sort</option>
+            <option value="asc">Ascending order</option>
+            <option value="desc">Descending order</option>
+        </select>
+    </div>
+    <div id="productContainer"></div>
+
+    <script>
+        const products = [
+            { name: "Product 1", price: 50 },
+            { name: "Product 2", price: 150 },
+            { name: "Product 3", price: 80 },
+            { name: "Product 4", price: 200 },
+        ];
+
+        const productContainer = document.getElementById("productContainer");
+
+        function displayProducts(filteredProducts) {
+            productContainer.innerHTML = "";
+
+            if (filteredProducts.length === 0) {
+                productContainer.innerHTML = "<p>don't have any product   .</p>";
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const productDiv = document.createElement("div");
+                productDiv.className = "product";
+                productDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>Price: ${product.price} EGP</p>
+                `;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        function filterProducts() {
+            const maxPrice = parseInt(document.getElementById("priceFilter").value);
+            if (!isNaN(maxPrice)) {
+                const filtered = products.filter(product => product.price < maxPrice);
+                sortAndDisplay(filtered);
+            } else {
+                sortAndDisplay(products);
+            }
+        }
+
+        function sortAndDisplay(filteredProducts = products) {
+            const sortOrder = document.getElementById("sortOrder").value;
+            let sortedProducts = [...filteredProducts];
+
+            if (sortOrder === "asc") {
+                sortedProducts.sort((a, b) => a.price - b.price);
+            } else if (sortOrder === "desc") {
+                sortedProducts.sort((a, b) => b.price - a.price);
+            }
+
+            displayProducts(sortedProducts);
+        }
+
+        displayProducts(products);
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        
+        }
+
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter input,
+        .filter button,
+        .filter select {
+            
+            margin-bottom: 10px;
+            margin-left: 3px;
+
+            margin-right: 3px;
+            padding: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+        .filter button {
+            padding: 5px 10px;
+           
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .product {
+            
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            width: 400px;
+        }
+
+        .product h3 {
+            margin: 0;
+        }
+    </style>
+</body>
